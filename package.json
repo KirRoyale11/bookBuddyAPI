@@ -18,7 +18,9 @@
   },
   "homepage": "https://github.com/KirRoyale11/bookBuddyAPI/tree/main#readme",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "express": "^4.19.2",
-    "nodemon": "^3.1.4"
+    "nodemon": "^3.1.4",
+    "pg": "^8.12.0"
   }
 }
