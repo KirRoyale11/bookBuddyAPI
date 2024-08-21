@@ -24,4 +24,29 @@ const getUserByEmail = async (email) => {
   }
 };
 
-module.exports = { createUser, getUserByEmail };
+// getUsers
+const getUsers = async () => {
+  try {
+    const SQL = `SELECT id, firstname,lastname,email FROM users`;
+    const { rows } = await client.query(SQL);
+    // console.log(rows);
+    return rows;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// getUserById
+const getUserById = async (id) => {
+  try {
+    const SQL = `SELECT id, firstname, lastname, email FROM users WHERE id=$1`;
+    const {
+      rows: [user],
+    } = await client.query(SQL, [id]);
+    return user;
+  } catch (err) {
+    console.log({ err, message: "Error Detected" });
+  }
+};
+
+module.exports = { createUser, getUserByEmail, getUsers, getUserById };

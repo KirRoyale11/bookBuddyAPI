@@ -4,7 +4,7 @@ const getBooks = async () => {
   try {
     const SQL = `SELECT * FROM books`;
     const { rows } = await client.query(SQL);
-    console.log(rows);
+    // console.log(rows);
     return rows;
   } catch (err) {
     console.log(err);
