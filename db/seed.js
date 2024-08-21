@@ -135,7 +135,6 @@ const seedDatabase = async () => {
     console.log("Adding books...");
     await insertBooks();
     console.log("Books added!");
-    await getUserByEmail("alice@example.com");
   } catch (err) {
     console.log(err);
   } finally {
