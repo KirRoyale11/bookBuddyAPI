@@ -11,6 +11,18 @@ const getBooks = async () => {
   }
 };
 
+const getBook = async (id) => {
+  try {
+    const SQL = `SELECT * FROM books WHERE id=$1`;
+    const {
+      rows: [book],
+    } = await client.query(SQL, [id]);
+    return book;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const createBook = async ({
   title,
   author,
@@ -38,4 +50,4 @@ const createBook = async ({
   }
 };
 
-module.exports = { createBook, getBooks };
+module.exports = { createBook, getBooks, getBook };
