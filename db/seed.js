@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const client = require("./client");
 const { createUser, getUserByEmail } = require("./users");
-const { createBook } = require("./books");
+const { createBook, getBooks } = require("./books");
 
 const users = [
   {
@@ -96,8 +96,6 @@ const createTables = async () => {
   }
 };
 
-//write another createTable here for
-
 const insertUsers = async () => {
   try {
     for (const user of users) {
@@ -107,8 +105,6 @@ const insertUsers = async () => {
     console.log(err);
   }
 };
-
-//create function insertBooks that loops over the books array above and inserts each one into the db
 
 const insertBooks = async () => {
   try {
@@ -135,6 +131,8 @@ const seedDatabase = async () => {
     console.log("Adding books...");
     await insertBooks();
     console.log("Books added!");
+    console.log("Getting all books...");
+    await getBooks();
   } catch (err) {
     console.log(err);
   } finally {

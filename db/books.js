@@ -1,5 +1,16 @@
 const client = require("./client");
 
+const getBooks = async () => {
+  try {
+    const SQL = `SELECT * FROM books`;
+    const { rows } = await client.query(SQL);
+    console.log(rows);
+    return rows;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 const createBook = async ({
   title,
   author,
@@ -20,11 +31,11 @@ const createBook = async ({
       coverimage,
       available,
     ]);
-    console.log(book);
+    // console.log(book);
     return book;
   } catch (err) {
     console.log(err);
   }
 };
 
-module.exports = { createBook };
+module.exports = { createBook, getBooks };
