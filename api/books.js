@@ -1,6 +1,6 @@
 const express = require("express");
 const booksRouter = express.Router();
-const { getBooks, getBook } = require("../db/books");
+const { getBooks, getBook, createBook } = require("../db/books");
 
 booksRouter.get("/", async (req, res) => {
   try {
@@ -18,6 +18,17 @@ booksRouter.get("/:id", async (req, res) => {
     res.send(result);
   } catch (err) {
     console.log({ err, message: "Something went wrong" });
+  }
+});
+
+booksRouter.post("/", async (req, res) => {
+  try {
+    const result = await createBook(req.body);
+    console.log(result);
+    res.send("Book created!");
+  } catch (err) {
+    console.log(err);
+    res.send(err);
   }
 });
 

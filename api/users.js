@@ -8,12 +8,12 @@ userRouter.get("/me", (req, res) => {
   res.send("Your Account Info");
 });
 
-userRouter.get("/", (req, res) => {
-  res.send("Users Home");
-});
+// userRouter.get("/", (req, res) => {
+//   res.send("Users Home");
+// });
 
 // GET users
-userRouter.get("/users", async (req, res) => {
+userRouter.get("/", async (req, res) => {
   try {
     const results = await getUsers();
     res.send(results);
@@ -34,14 +34,21 @@ userRouter.get("/:id", async (req, res) => {
 });
 
 //POST request to baseURL/api/users/register
-userRouter.post("/register", (req, res) => {
-  console.log("Request Body", req.body);
-  res.send("User registered. Thanks!");
+userRouter.post("/register", async (req, res) => {
+  try {
+    const result = await createUser(req.body);
+    console.log(result);
+    res.send("User registered. Thanks!");
+  } catch (err) {
+    res.send(err);
+  }
 });
 
 userRouter.post("/login", (req, res) => {
   console.log("REQUEST BODY", req.body);
   res.send("Login successful!");
 });
+
+// userRouter.post("/")
 
 module.exports = userRouter;

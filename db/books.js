@@ -7,7 +7,7 @@ const getBooks = async () => {
     // console.log(rows);
     return rows;
   } catch (err) {
-    console.log(err);
+    res.send(err);
   }
 };
 
