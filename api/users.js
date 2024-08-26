@@ -1,7 +1,13 @@
 const express = require("express");
 const userRouter = express.Router();
 
-const { createUser, getUsers, getUserById } = require("../db/users");
+const {
+  createUser,
+  getUsers,
+  getUserByEmail,
+  getUserById,
+  getUser,
+} = require("../db/users");
 
 // baseURL/users/me
 userRouter.get("/me", (req, res) => {
@@ -35,7 +41,23 @@ userRouter.get("/:id", async (req, res) => {
 
 //POST request to baseURL/api/users/register
 userRouter.post("/register", async (req, res) => {
+  const { firstname, lastname, email, password } = req.body;
+  if (!email) {
+    res.send("Email not provided!");
+    return;
+    //do something here
+  }
+  if (!password) {
+    res.send("Password not provided!");
+    return;
+    //do something here
+  }
   try {
+    const existingUser = await getUserByEmail(email);
+    if (existingUser) {
+      res.send("User already registered with that email.");
+      return;
+    }
     const result = await createUser(req.body);
     console.log(result);
     res.send("User registered. Thanks!");

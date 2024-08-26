@@ -8,7 +8,12 @@ const createUser = async ({ firstname, lastname, email, password }) => {
     const SQL = `INSERT INTO users(firstname, lastname, email, password) VALUES($1, $2, $3, $4) ON CONFLICT(email) DO NOTHING RETURNING id, firstname, lastname, email`;
     const {
       rows: [user],
-    } = await client.query(SQL, [firstname, lastname, email, hashedPassword]);
+    } = await client.query(SQL, [
+      firstname || "First Name",
+      lastname || "Last Name",
+      email,
+      hashedPassword,
+    ]);
     console.log(user);
     return user;
   } catch (err) {
@@ -22,6 +27,7 @@ const getUserByEmail = async (email) => {
     const {
       rows: [result],
     } = await client.query(SQL, [email]);
+    return result;
   } catch (err) {
     console.log(err);
   }
@@ -34,6 +40,19 @@ const getUsers = async () => {
     const { rows } = await client.query(SQL);
     // console.log(rows);
     return rows;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getUser = async ({ email, password }) => {
+  try {
+    const existingUser = await getUserByEmail(email);
+    if (!existingUser) return;
+    const hashedPassword = existingUser.password;
+    const passwordsMatch = await bcrypt.compare(password, hashedPassword);
+    if (!passwordsMatch) return;
+    delete existingUser.password;
   } catch (err) {
     console.log(err);
   }
@@ -52,4 +71,4 @@ const getUserById = async (id) => {
   }
 };
 
-module.exports = { createUser, getUserByEmail, getUsers, getUserById };
+module.exports = { createUser, getUserByEmail, getUsers, getUser, getUserById };
