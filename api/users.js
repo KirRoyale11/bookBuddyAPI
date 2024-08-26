@@ -1,7 +1,7 @@
 const express = require("express");
 const userRouter = express.Router();
 
-const { getUsers, getUserById } = require("../db/users");
+const { createUser, getUsers, getUserById } = require("../db/users");
 
 // baseURL/users/me
 userRouter.get("/me", (req, res) => {
