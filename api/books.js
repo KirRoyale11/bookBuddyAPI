@@ -17,13 +17,26 @@ booksRouter.get("/", async (req, res, next) => {
   }
 });
 
-booksRouter.get("/:id", async (req, res) => {
+booksRouter.get("/:id", async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const id = Number(req.params.id);
+
+    // console.log(id); SUCCESS
+    if (isNaN(id) || req.params.id === " ") {
+      next({
+        name: "Invalid ID Format",
+        message: "The provided request parameter is not a valid book ID.",
+      });
+      return;
+    }
     const result = await getBook(id);
+    if (!result) {
+      next({ name: "NotFound", message: "No matching book found." });
+      return;
+    }
     res.send(result);
   } catch (err) {
-    console.log({ err, message: "Something went wrong" });
+    next(err);
   }
 });
 
@@ -48,12 +61,40 @@ booksRouter.delete("/:id", async (req, res) => {
   }
 });
 
-booksRouter.patch("/:id", async (req, res) => {
+booksRouter.patch("/:id", async (req, res, next) => {
   try {
-    const result = await updateBook(req.params.id, req.body.available);
-    res.send({ message: "Book info updated.", result });
+    const id = Number(req.params.id);
+    console.log(id);
+    if (isNaN(id) || req.params.id === " ") {
+      next({
+        name: "InvalidIDFormat2",
+        message: "The provided request is not a valid book ID.",
+      });
+      return;
+    }
+
+    const result = await getBook(id);
+    if (!result) {
+      next({ name: "NotFound2", message: "No matching book found." });
+      return;
+    } else {
+      const updated = updateBook(req.params.id, req.body.available);
+      if (updated) {
+        res.send({
+          message: "Updated successfully.",
+          updated,
+        });
+      } else {
+        next({
+          name: "UpdateError",
+          message: "Error updating book.",
+        });
+        return;
+      }
+    }
+    // res.send({ message: "Book info updated.", result });
   } catch (err) {
-    res.send(err);
+    next(err);
   }
 });
 

@@ -1,6 +1,8 @@
 const express = require("express");
 
 const apiRouter = express.Router();
+const jwt = require("jsonwebtoken");
+
 // register routes for requests that have form baseURL/api/books
 apiRouter.use("/books", require("./books"));
 
