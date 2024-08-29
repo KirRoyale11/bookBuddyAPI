@@ -46,13 +46,17 @@ const getUsers = async () => {
 };
 
 const getUser = async ({ email, password }) => {
+  // console.log(email); SUCCESS
   try {
     const existingUser = await getUserByEmail(email);
     if (!existingUser) return;
     const hashedPassword = existingUser.password;
     const passwordsMatch = await bcrypt.compare(password, hashedPassword);
     if (!passwordsMatch) return;
+    console.log(existingUser);
     delete existingUser.password;
+    console.log("existing user", existingUser);
+    return existingUser;
   } catch (err) {
     console.log(err);
   }
@@ -61,7 +65,7 @@ const getUser = async ({ email, password }) => {
 // getUserById
 const getUserById = async (id) => {
   try {
-    const SQL = `SELECT id, firstname, lastname, email FROM users WHERE id=$1`;
+    const SQL = `SELECT * FROM users WHERE id=$1`;
     const {
       rows: [user],
     } = await client.query(SQL, [id]);

@@ -9,6 +9,8 @@ const {
   getUser,
 } = require("../db/users");
 
+const jwt = require("jsonwebtoken");
+
 // baseURL/users/me
 userRouter.get("/me", (req, res) => {
   res.send("Your Account Info");
@@ -59,6 +61,28 @@ userRouter.post("/register", async (req, res) => {
       return;
     }
     const result = await createUser(req.body);
+    if (result) {
+      const token = jwt.sign({ id: result.id, email }, process.env.JWT_SECRET, {
+        expiresIn: "1w",
+      });
+      console.log(token);
+      res.send({
+        message: "Registration Successful!",
+        token,
+        user: {
+          id: result.id,
+          firstname: result.firstname,
+          lastname: result.lastname,
+          email: result.email,
+        },
+      });
+      return;
+    } else {
+      next({
+        name: "IncorrectCredentialsError",
+        message: "Username or password is incorrect",
+      });
+    }
     console.log(result);
     res.send("User registered. Thanks!");
   } catch (err) {
@@ -66,9 +90,41 @@ userRouter.post("/register", async (req, res) => {
   }
 });
 
-userRouter.post("/login", (req, res) => {
-  console.log("REQUEST BODY", req.body);
-  res.send("Login successful!");
+// modify login to add toekn if login successful
+userRouter.post("/login", async (req, res, next) => {
+  console.log(req.body.email);
+  const { email, password } = req.body;
+  if (!email || !password) {
+    next({
+      name: "MissingCredentailsError",
+      message: "Please supply both an email and a password.",
+    });
+  }
+  try {
+    const result = await getUser(req.body);
+    if (result) {
+      //create token here and send with user id and email
+
+      const token = jwt.sign({ id: result.id, email }, process.env.JWT_SECRET, {
+        expiresIn: "1w",
+      });
+
+      res.send({
+        message: "Login successful!",
+        token,
+      });
+    } else {
+      next({
+        name: "IncorrectCredentialsError",
+        message: "Username or password is incorrect!",
+      });
+    }
+
+    // console.log(result);
+    // res.send("Login successful!");
+  } catch (err) {
+    next(err);
+  }
 });
 
 // userRouter.post("/")
