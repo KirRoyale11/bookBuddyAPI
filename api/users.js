@@ -42,22 +42,25 @@ userRouter.get("/:id", async (req, res) => {
 });
 
 //POST request to baseURL/api/users/register
-userRouter.post("/register", async (req, res) => {
+userRouter.post("/register", async (req, res, next) => {
   const { firstname, lastname, email, password } = req.body;
   if (!email) {
-    res.send("Email not provided!");
+    next({ name: "EmailRequiredError", message: "Email not provided." });
     return;
     //do something here
   }
   if (!password) {
-    res.send("Password not provided!");
+    next({ name: "PasswordRequiredError", message: "Password not provided" });
     return;
     //do something here
   }
   try {
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-      res.send("User already registered with that email.");
+      next({
+        name: "ExistingUserError",
+        message: "User already registered with that email.",
+      });
       return;
     }
     const result = await createUser(req.body);
@@ -79,14 +82,13 @@ userRouter.post("/register", async (req, res) => {
       return;
     } else {
       next({
-        name: "IncorrectCredentialsError",
-        message: "Username or password is incorrect",
+        name: "RegistrationError",
+        message: "Error registering, please try again.",
       });
+      return;
     }
-    console.log(result);
-    res.send("User registered. Thanks!");
   } catch (err) {
-    res.send(err);
+    next(err);
   }
 });
 
