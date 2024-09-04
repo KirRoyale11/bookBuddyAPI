@@ -10,9 +10,10 @@ const {
 } = require("../db/users");
 
 const jwt = require("jsonwebtoken");
+const { requireUser } = require("./utils");
 
 // baseURL/users/me
-userRouter.get("/me", (req, res) => {
+userRouter.get("/me", requireUser, (req, res) => {
   res.send("Your Account Info");
 });
 

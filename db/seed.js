@@ -3,6 +3,11 @@ require("dotenv").config();
 const client = require("./client");
 const { createUser, getUserByEmail } = require("./users");
 const { createBook, getBooks } = require("./books");
+const {
+  createReservation,
+  getReservation,
+  deleteReservation,
+} = require("./reservations");
 
 const users = [
   {
@@ -66,8 +71,9 @@ const books = [
 
 const dropTables = async () => {
   try {
-    await client.query(`DROP TABLE IF EXISTS users`);
-    await client.query(`DROP TABLE IF EXISTS books`);
+    await client.query(`DROP TABLE IF EXISTS users CASCADE`);
+    await client.query(`DROP TABLE IF EXISTS books CASCADE`);
+    await client.query(`DROP TABLE IF EXISTS reservations`);
   } catch (err) {
     console.log(err);
   }
@@ -91,6 +97,12 @@ const createTables = async () => {
         coverimage VARCHAR(255) DEFAULT 'https://images.pexels.com/photos/7034646/pexels-photo-7034646.jpeg',
         available BOOLEAN DEFAULT TRUE
         )`);
+
+    await client.query(`CREATE TABLE reservations(
+        id SERIAL PRIMARY KEY,
+        booksid INTEGER REFERENCES books(id),
+        userid INTEGER REFERENCES users(id)
+    )`);
   } catch (err) {
     console.log(err);
   }
@@ -133,6 +145,8 @@ const seedDatabase = async () => {
     console.log("Books added!");
     console.log("Getting all books...");
     await getBooks();
+    await createReservation({ userId: 1, booksId: 1 });
+    console.log(await getReservation(1));
   } catch (err) {
     console.log(err);
   } finally {
