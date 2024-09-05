@@ -37,6 +37,10 @@ apiRouter.use("/books", require("./books"));
 
 //register routes for requests of form baseURL/api/users
 apiRouter.use("/users", require("./users"));
+
+//register routes for requests of form {baseurl}/api/reservations
+apiRouter.use("/reservations", require("./reservations"));
+
 // baseURL/api
 apiRouter.get("/", (req, res) => {
   res.send("Hello from /api");

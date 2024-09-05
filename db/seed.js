@@ -143,10 +143,12 @@ const seedDatabase = async () => {
     console.log("Adding books...");
     await insertBooks();
     console.log("Books added!");
-    console.log("Getting all books...");
-    await getBooks();
+    // console.log("Getting all books...");
+    // await getBooks();
     await createReservation({ userId: 1, booksId: 1 });
     console.log(await getReservation(1));
+    await deleteReservation(1);
+    console.log("Deleting Reservation");
   } catch (err) {
     console.log(err);
   } finally {

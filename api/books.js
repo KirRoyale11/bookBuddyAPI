@@ -6,7 +6,9 @@ const {
   createBook,
   deleteBook,
   updateBook,
-} = require("../db/books");
+} = require("../db");
+const { createReservation } = require("../db/reservations");
+const { requireUser } = require("./utils");
 
 booksRouter.get("/", async (req, res, next) => {
   try {
@@ -61,7 +63,8 @@ booksRouter.delete("/:id", async (req, res) => {
   }
 });
 
-booksRouter.patch("/:id", async (req, res, next) => {
+booksRouter.patch("/:id", requireUser, async (req, res, next) => {
+  console.log("USER", req.user);
   try {
     const id = Number(req.params.id);
     console.log(id);
@@ -80,6 +83,7 @@ booksRouter.patch("/:id", async (req, res, next) => {
     } else {
       const updated = updateBook(req.params.id, req.body.available);
       if (updated) {
+        await createReservation({ userId: req.user.id, booksId: updated.id });
         res.send({
           message: "Updated successfully.",
           updated,

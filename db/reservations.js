@@ -30,9 +30,9 @@ const deleteReservation = async (id) => {
   try {
     const SQL = `DELETE FROM reservations WHERE id=$1`;
     const {
-      rows: [reservation],
+      rows: [result],
     } = await client.query(SQL, [id]);
-    return reservation;
+    return result;
   } catch (err) {
     throw err;
   }
@@ -42,9 +42,9 @@ const deleteBook = async (id) => {
   try {
     const SQL = `DELETE FROM books WHERE id=$1`;
     const {
-      rows: [book],
+      rows: [result],
     } = await client.query(SQL, [id]);
-    return book;
+    return result;
   } catch (err) {
     console.log(err);
   }
