@@ -26,9 +26,23 @@ const getReservation = async (id) => {
   }
 };
 
+const getUsersReservations = async (userId) => {
+  try {
+    const SQL = `SELECT reservations.id, books.title, books.description, books.coverimage, books.author FROM 
+    reservations JOIN books ON reservations.booksid = books.id AND userid=$1`;
+
+    const { rows } = await client.query(SQL, [userId]);
+    if (!rows) return;
+    console.log(rows);
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+};
+
 const deleteReservation = async (id) => {
   try {
-    const SQL = `DELETE FROM reservations WHERE id=$1`;
+    const SQL = `DELETE FROM reservations WHERE id=$1 RETURNING *`;
     const {
       rows: [result],
     } = await client.query(SQL, [id]);
@@ -38,16 +52,9 @@ const deleteReservation = async (id) => {
   }
 };
 
-const deleteBook = async (id) => {
-  try {
-    const SQL = `DELETE FROM books WHERE id=$1`;
-    const {
-      rows: [result],
-    } = await client.query(SQL, [id]);
-    return result;
-  } catch (err) {
-    console.log(err);
-  }
+module.exports = {
+  createReservation,
+  getReservation,
+  getUsersReservations,
+  deleteReservation,
 };
-
-module.exports = { createReservation, getReservation, deleteReservation };

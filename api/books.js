@@ -42,7 +42,7 @@ booksRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-booksRouter.post("/", async (req, res) => {
+booksRouter.post("/", requireUser, async (req, res) => {
   try {
     const result = await createBook(req.body);
     console.log(result);
@@ -53,7 +53,7 @@ booksRouter.post("/", async (req, res) => {
   }
 });
 
-booksRouter.delete("/:id", async (req, res) => {
+booksRouter.delete("/:id", requireUser, async (req, res) => {
   try {
     const result = await deleteBook(req.params.id);
     console.log(result);

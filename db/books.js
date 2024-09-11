@@ -4,6 +4,9 @@ const getBooks = async () => {
   try {
     const SQL = `SELECT * FROM books`;
     const { rows } = await client.query(SQL);
+    if (!rows) {
+      return { message: "Something went wrong, no results." };
+    }
     // console.log(rows);
     return rows;
   } catch (err) {
@@ -55,9 +58,9 @@ const deleteBook = async (id) => {
   try {
     const SQL = `DELETE FROM books WHERE id=$1`;
     const {
-      rows: [book],
+      rows: [result],
     } = await client.query(SQL, [id]);
-    return book;
+    return result;
   } catch (err) {
     console.log(err);
   }
@@ -67,9 +70,9 @@ const updateBook = async (id, available) => {
   try {
     const SQL = `UPDATE books SET available=$1 WHERE id=$2 RETURNING *`;
     const {
-      rows: [result],
+      rows: [book],
     } = await client.query(SQL, [available, id]);
-    return result;
+    return book;
   } catch (err) {
     console.log(err);
   }

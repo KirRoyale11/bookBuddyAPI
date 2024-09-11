@@ -69,6 +69,7 @@ const getUserById = async (id) => {
     const {
       rows: [user],
     } = await client.query(SQL, [id]);
+    delete user.password;
     return user;
   } catch (err) {
     console.log({ err, message: "Error Detected" });
