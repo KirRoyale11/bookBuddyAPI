@@ -75,7 +75,6 @@ booksRouter.patch("/:id", requireUser, async (req, res, next) => {
       });
       return;
     }
-
     const result = await getBook(id);
     if (!result) {
       next({ name: "NotFound2", message: "No matching book found." });
