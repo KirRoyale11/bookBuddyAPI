@@ -8,6 +8,7 @@
     "dev": "nodemon index.js",
     "seed:dev": "nodemon ./db/seed.js",
     "seed": "node ./db/seed.js"
+    
   },
   "repository": {
     "type": "git",
