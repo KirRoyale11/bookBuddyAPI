@@ -81,7 +81,7 @@ booksRouter.patch("/:id", requireUser, async (req, res, next) => {
       next({ name: "NotFound2", message: "No matching book found." });
       return;
     } else {
-      const updated = updateBook(req.params.id, req.body.available);
+      const updated = await updateBook(req.params.id, req.body.available);
       if (updated) {
         await createReservation({ userId: req.user.id, booksId: updated.id });
         res.send({
