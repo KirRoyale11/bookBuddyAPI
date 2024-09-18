@@ -43,9 +43,8 @@ const createBook = async ({
       title,
       author,
       description,
-      coverimage,
-
-      //   || "https://images.pexels.com/photos/7034646/pexels-photo-7034646.jpeg",
+      coverimage ||
+        "https://images.pexels.com/photos/7034646/pexels-photo-7034646.jpeg",
       available,
       // || true,
     ]);
